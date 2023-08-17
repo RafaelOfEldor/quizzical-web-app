@@ -6,7 +6,6 @@ export default function({questionSet, selectedAnswer, isChecked}, ...rest) {
 
 
   const answers = [questionSet.correctAnswer, ...questionSet.incorrectAnswers].sort();
-  console.log(questionSet.correctAnswer, ...questionSet.incorrectAnswers)
   const answerOne = decode(answers[0])
   const answerTwo = decode(answers[1])
   const answerThree = decode(answers[2])

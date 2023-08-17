@@ -11,36 +11,82 @@ import { nanoid } from "nanoid"
 export default function App() {
 
   const [quizStarted, setQuizStarted] = React.useState(false)
-  const [quizData, setQuizData] = React.useState([])
   const [isChecked, setIsChecked] = React.useState(false)
-  const [randomNumbersArray, setRandomNumbersArray] = React.useState([])
   const [amountOfCorrectAnswers, setAmountOfCorrectAnswers] = React.useState(0)
   const [questionsAndAnswers, setQuestionsAndAnswers] = React.useState([])
 
-  async function fetchQuestionsAndAnswers() {
-    const response = await fetch("https://opentdb.com/api.php?amount=5&type=multiple");
+  async function fetchQuestionsAndAnswers(category) {
+    if (category === "Random") {
+      const response = await fetch("https://opentdb.com/api.php?amount=5&type=multiple");
+      const data = await response.json();
+      setQuestionsAndAnswers(() => {
+        return data.results.map( (item, index) => {
+            return {
+                id: index,
+                question: item.question,
+                correctAnswer: item.correct_answer,
+                incorrectAnswers: item.incorrect_answers,
+                category: `category ${ index + 1 }`,
+                selectedAnswer: "",
+                checked: false
+            }
+        });
+      })
+    } else if (category === "Games") {
+      const response = await fetch("https://opentdb.com/api.php?amount=5&category=15&type=multiple");
+      const data = await response.json();
+      setQuestionsAndAnswers(() => {
+        return data.results.map( (item, index) => {
+            return {
+                id: index,
+                question: item.question,
+                correctAnswer: item.correct_answer,
+                incorrectAnswers: item.incorrect_answers,
+                category: `category ${ index + 1 }`,
+                selectedAnswer: "",
+                checked: false
+            }
+        });
+      })
+    } else if (category === "Movies") {
+      const response = await fetch("https://opentdb.com/api.php?amount=5&category=11&type=multiple");
+      const data = await response.json();
+      setQuestionsAndAnswers(() => {
+        return data.results.map( (item, index) => {
+            return {
+                id: index,
+                question: item.question,
+                correctAnswer: item.correct_answer,
+                incorrectAnswers: item.incorrect_answers,
+                category: `category ${ index + 1 }`,
+                selectedAnswer: "",
+                checked: false
+            }
+        });
+      })
+    } else if (category === "Tech") {
+      const response = await fetch("https://opentdb.com/api.php?amount=5&category=18&type=multiple");
+      const data = await response.json();
+      setQuestionsAndAnswers(() => {
+        return data.results.map( (item, index) => {
+            return {
+                id: index,
+                question: item.question,
+                correctAnswer: item.correct_answer,
+                incorrectAnswers: item.incorrect_answers,
+                category: `category ${ index + 1 }`,
+                selectedAnswer: "",
+                checked: false
+            }
+        });
+      })
+    } 
     
-    const data = await response.json();
 
-    console.log(data.results)
-    setQuestionsAndAnswers(() => {
-      return data.results.map( (item, index) => {
-          return {
-              id: index,
-              question: item.question,
-              correctAnswer: item.correct_answer,
-              incorrectAnswers: item.incorrect_answers,
-              category: `category ${ index + 1 }`,
-              selectedAnswer: "",
-              checked: false
-          }
-      });
-    }) 
+     
 }
 
-  React.useEffect(() => {
-    fetchQuestionsAndAnswers();
-  }, [])
+  
 
 
 
@@ -58,7 +104,9 @@ export default function App() {
  )
 
  
+    React.useEffect(() => {
 
+    }, [])
 
   function startQuiz() {
     setQuizStarted(true)
@@ -113,11 +161,9 @@ React.useEffect(() => {
      }
    })
  }
- console.log(amountOfCorrectAnswers)
 }, [questionsAndAnswers]);
 
 function checkAnswers() {
-  
   setIsChecked(true)
 }
 
@@ -146,6 +192,7 @@ function resetGame() {
       :
       <StartScreen 
       startQuiz={startQuiz}
+      preLoadQuizInfo={fetchQuestionsAndAnswers}
       />
       }
       
